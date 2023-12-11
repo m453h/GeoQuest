@@ -1,0 +1,13 @@
+{% extends 'main/app.base.html.twig' %}
+
+
+{% block content %}
+    <div class="welcome-note mb-10">
+        <h1 class="text-3xl font-light">Welcome, {{ app.user.firstName }}</h1>
+        <div class="divider divider-left"></div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
