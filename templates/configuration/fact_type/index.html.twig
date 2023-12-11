@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<title>FactType index</title>
+
+{% block body %}
+    <h1>FactType index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Description</th>
+                <th>ApiField</th>
+                <th>QuestionPrompt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for fact_type in fact_types %}
+            <tr>
+                <td>{{ fact_type.id }}</td>
+                <td>{{ fact_type.description }}</td>
+                <td>{{ fact_type.apiField }}</td>
+                <td>{{ fact_type.questionPrompt }}</td>
+                <td>
+                    <a href="{{ path('app_configuration_fact_type_show', {'id': fact_type.id}) }}">show</a>
+                    <a href="{{ path('app_configuration_fact_type_edit', {'id': fact_type.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_configuration_fact_type_new') }}">Create new</a>
+{% endblock %}
