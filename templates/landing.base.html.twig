@@ -1,0 +1,11 @@
+{%  extends 'main.base.html.twig' %}
+
+{% block main_body %}
+
+    <body {% if body_background is defined %} style="background: #F3F4F7;"{% endif %}>
+        {% block body %}
+
+        {% endblock %}
+
+    </body>
+{% endblock %}
