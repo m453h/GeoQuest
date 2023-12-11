@@ -1,0 +1,89 @@
+Accounts:
+    FrontEndUsers:
+      roleClass: App\Controller\UserAccounts\UserController
+      actions: ["view","add","edit","delete","info","approve","decline"]
+      key: users-accounts
+
+    Roles:
+      roleClass: App\Controller\UserAccounts\RoleController
+      actions: ["view","add","edit","delete"]
+      key: role-configuration
+
+
+Location:
+  VillagesAndStreets:
+    roleClass: App\Controller\Location\VillageStreetController
+    actions: ["view","add","edit","delete"]
+    key: villages-and-streets
+
+Configuration:
+  AccommodationDetails:
+    roleClass: App\Controller\Configuration\AccommodationDetailsController
+    actions: ["view","add","edit","delete"]
+    key: accommodation-details
+
+  BuildingTypes:
+    roleClass: App\Controller\Configuration\BuildingTypesController
+    actions: ["view","add","edit","delete"]
+    key: building-types
+
+  LandAcquisition:
+    roleClass: App\Controller\Configuration\LandAcquisitionController
+    actions: ["view","add","edit","delete"]
+    key: land-acquisition
+
+  LandAcquisitionFundSource:
+    roleClass: App\Controller\Configuration\LandAcquisitionFundSourceController
+    actions: ["view","add","edit","delete"]
+    key: land-acquisition-fund-source
+
+  LandAcquisitionInformationSource:
+    roleClass: App\Controller\Configuration\LandAcquisitionInformationSourceController
+    actions: ["view","add","edit","delete"]
+    key: land-acquisition-information-source
+
+  LandUse:
+    roleClass: App\Controller\Configuration\LandUseController
+    actions: [ "view","add","edit","delete" ]
+    key: land-use
+
+  MortgageCreditFacility:
+    roleClass: App\Controller\Configuration\MortgageCreditFacilityController
+    actions: [ "view","add","edit","delete" ]
+    key: mortgage-credit-facility
+
+  PropertyAccessibility:
+    roleClass: App\Controller\Configuration\PropertyAccessibilityController
+    actions: [ "view","add","edit","delete" ]
+    key: property-accessibility
+
+  PropertyCondition:
+    roleClass: App\Controller\Configuration\PropertyConditionController
+    actions: [ "view","add","edit","delete" ]
+    key: property-condition
+
+  PropertySaleType:
+    roleClass: App\Controller\Configuration\PropertySaleTypeController
+    actions: [ "view","add","edit","delete" ]
+    key: property-sale-type
+
+  PropertySize:
+    roleClass: App\Controller\Configuration\PropertySizeController
+    actions: [ "view","add","edit","delete" ]
+    key: property-size
+
+  RoadInfrastructureQuality:
+    roleClass: App\Controller\Configuration\RoadInfrastructureQualityController
+    actions: [ "view","add","edit","delete" ]
+    key: road-infrastructure-quality
+
+  ServicesAmenities:
+    roleClass: App\Controller\Configuration\ServicesAmenitiesController
+    actions: [ "view","add","edit","delete" ]
+    key: services-amenities
+
+ValuationData:
+  ValuationRegister:
+    roleClass: App\Controller\ValuationData\ValuationRegisterController
+    actions: ["view","add","edit","delete","import-csv", "info"]
+    key: valuation-register
