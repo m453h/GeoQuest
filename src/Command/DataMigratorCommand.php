@@ -9,16 +9,25 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsCommand(
     name: 'app:data-migrator',
-    description: 'Add a short description for your command',
+    description: 'This console application allows you to import data from RestCountries API',
 )]
 class DataMigratorCommand extends Command
 {
-    public function __construct()
+    private HttpClientInterface $client;
+
+    public function __construct(HttpClientInterface $client)
     {
         parent::__construct();
+        $this->client = $client;
     }
 
     protected function configure(): void
@@ -34,6 +43,7 @@ class DataMigratorCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $arg1 = $input->getArgument('arg1');
 
+
         if ($arg1) {
             $io->note(sprintf('You passed an argument: %s', $arg1));
         }
@@ -45,5 +55,31 @@ class DataMigratorCommand extends Command
         $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     */
+    public function fetchAllCountriesData(): array
+    {
+        $response = $this->client->request(
+            'GET',
+            'https://restcountries.com/v3.1/all'
+        );
+
+        $statusCode = $response->getStatusCode();
+        // $statusCode = 200
+        $contentType = $response->getHeaders()['content-type'][0];
+        // $contentType = 'application/json'
+        $content = $response->getContent();
+        // $content = '{"id":521583, "name":"symfony-docs", ...}'
+        $content = $response->toArray();
+        // $content = ['id' => 521583, 'name' => 'symfony-docs', ...]
+
+        return $content;
     }
 }
