@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SubRegionRepository::class)]
+#[ORM\Table(name: 'cfg_sub_regions')]
 class SubRegion
 {
     #[ORM\Id]

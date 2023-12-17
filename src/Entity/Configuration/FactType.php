@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FactTypeRepository::class)]
+#[ORM\Table(name: 'cfg_fact_types')]
 class FactType
 {
     #[ORM\Id]
