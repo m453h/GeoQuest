@@ -6,6 +6,7 @@ use App\Repository\Location\CountryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CountryRepository::class)]
+#[ORM\Table(name: 'cfg_countries')]
 class Country
 {
     #[ORM\Id]

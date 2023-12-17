@@ -4,6 +4,9 @@ namespace App\Repository\Location;
 
 use App\Entity\Location\Region;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,28 +24,36 @@ class RegionRepository extends ServiceEntityRepository
         parent::__construct($registry, Region::class);
     }
 
-//    /**
-//     * @return Region[] Returns an array of Region objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function add(Region $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
 
-//    public function findOneBySomeField($value): ?Region
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    /**
+     * @return true
+     * @throws Exception
+     */
+    public function removeAllRegions()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $conn->executeQuery("TRUNCATE TABLE cfg_regions CASCADE;");
+        return true;
+    }
+
+    public function getAllRegionIds(): ArrayCollection
+    {
+        $regions = $this->findAll();
+        $regionIds = new ArrayCollection();
+
+        foreach ($regions as $region) {
+            $regionIds->set($region->getName(), $region);
+        }
+
+        return $regionIds;
+    }
+
 }

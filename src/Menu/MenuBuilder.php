@@ -40,7 +40,7 @@ class MenuBuilder
         $menu->addChild('Configuration', ['uri' => '#', 'extras'=>['icon'=>'gears']])
             ->setAttributes(['class'=>'hs-accordion', 'id'=>'configuration-accordion'])
             ->setChildrenAttribute('class', '')
-            ->addChild('Manage Data Attributes', ['route' => 'app_home'])
+            ->addChild('Manage Data Attributes', ['route' => 'app_configuration_fact_type_index'])
             ->addChild('Add', ['route' => 'app_home'])
             ->setDisplay(false)->getParent()
             ->addChild('Edit', ['route' => 'app_home'])

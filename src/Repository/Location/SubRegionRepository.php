@@ -4,6 +4,7 @@ namespace App\Repository\Location;
 
 use App\Entity\Location\SubRegion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,28 +22,24 @@ class SubRegionRepository extends ServiceEntityRepository
         parent::__construct($registry, SubRegion::class);
     }
 
-//    /**
-//     * @return SubRegion[] Returns an array of SubRegion objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function add(SubRegion $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
 
-//    public function findOneBySomeField($value): ?SubRegion
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    /**
+     * @return true
+     * @throws Exception
+     */
+    public function removeAll()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $conn->executeQuery("TRUNCATE TABLE cfg_sub_regions CASCADE;");
+        return true;
+    }
+
 }

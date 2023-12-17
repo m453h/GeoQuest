@@ -2,6 +2,8 @@
 
 namespace App\Command;
 
+use App\Service\RestCountriesAPIHelper;
+use Doctrine\DBAL\Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,7 +16,6 @@ use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsCommand(
     name: 'app:data-migrator',
@@ -22,64 +23,59 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 )]
 class DataMigratorCommand extends Command
 {
-    private HttpClientInterface $client;
 
-    public function __construct(HttpClientInterface $client)
+    private RestCountriesAPIHelper $restCountriesAPIHelper;
+
+    public function __construct(RestCountriesAPIHelper $restCountriesAPIHelper)
     {
         parent::__construct();
-        $this->client = $client;
+        $this->restCountriesAPIHelper = $restCountriesAPIHelper;
     }
 
     protected function configure(): void
     {
         $this
-            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
-        ;
+            ->addArgument('mode', InputArgument::OPTIONAL,
+                'Data load mode  <Append, Overwrite>')
+            ->addOption('load-regions', null, InputOption::VALUE_NONE,
+                'Load all region data into the database')
+            ->addOption('load-sub-regions', null, InputOption::VALUE_NONE,
+                'Load all sub-region data into the database')
+            ->addOption('get-countries', null, InputOption::VALUE_NONE,
+                'Load all country data into the database');
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $arg1 = $input->getArgument('arg1');
+        $mode = $input->getArgument('mode');
+
+        if (!$mode)
+            $mode = 'default';
+
+        $io->note(sprintf('You passed an argument: %s', $mode));
 
 
-        if ($arg1) {
-            $io->note(sprintf('You passed an argument: %s', $arg1));
+        if ($input->getOption('load-regions')) {
+            $io->info(sprintf("Loading regions using <%s> mode...", $mode));
+            $count = $this->restCountriesAPIHelper->loadAllRegions($mode);
+            $io->success(sprintf("%s regions successfully recorded in database", $count));
+        } elseif ($input->getOption('load-sub-regions')) {
+            $io->info(sprintf("Loading sub regions using <%s> mode...", $mode));
+            $count = $this->restCountriesAPIHelper->loadAllSubRegions($mode);
+            $io->success(sprintf("%s sub regions successfully recorded in database", $count));
         }
-
-        if ($input->getOption('option1')) {
-            // ...
-        }
-
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
 
         return Command::SUCCESS;
     }
 
-    /**
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     */
-    public function fetchAllCountriesData(): array
-    {
-        $response = $this->client->request(
-            'GET',
-            'https://restcountries.com/v3.1/all'
-        );
 
-        $statusCode = $response->getStatusCode();
-        // $statusCode = 200
-        $contentType = $response->getHeaders()['content-type'][0];
-        // $contentType = 'application/json'
-        $content = $response->getContent();
-        // $content = '{"id":521583, "name":"symfony-docs", ...}'
-        $content = $response->toArray();
-        // $content = ['id' => 521583, 'name' => 'symfony-docs', ...]
-
-        return $content;
-    }
 }
