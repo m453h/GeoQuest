@@ -2,11 +2,12 @@
 
 namespace App\Service;
 
+use App\Entity\Location\Country;
 use App\Entity\Location\Region;
 use App\Entity\Location\SubRegion;
+use App\Repository\Location\CountryRepository;
 use App\Repository\Location\RegionRepository;
 use App\Repository\Location\SubRegionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -21,16 +22,19 @@ class RestCountriesAPIHelper
     private HttpClientInterface $client;
     private RegionRepository $regionRepository;
     private SubRegionRepository $subRegionRepository;
+    private CountryRepository $countryRepository;
 
     public function __construct(HttpClientInterface $client,
                                 $resCountriesAPIURL,
                                 RegionRepository $regionRepository,
-                                SubRegionRepository $subRegionRepository
+                                SubRegionRepository $subRegionRepository,
+                                CountryRepository $countryRepository
     ){
         $this->resCountriesAPIURL = $resCountriesAPIURL;
         $this->client = $client;
         $this->regionRepository = $regionRepository;
         $this->subRegionRepository = $subRegionRepository;
+        $this->countryRepository = $countryRepository;
     }
 
     /**
@@ -102,6 +106,40 @@ class RestCountriesAPIHelper
                 }
             }
 
+            return $numberOfRecords;
+        }
+        return $numberOfRecords;
+    }
+
+    /**
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface|Exception
+     */
+    public function loadAllCountries($mode): int
+    {
+        $response = $this->client->request('GET', sprintf('%s/all', $this->resCountriesAPIURL));
+        $numberOfRecords = 0;
+
+        if ($response->getStatusCode() == 200) {
+            $results = $response->toArray();
+            $countries = [];
+
+            if($mode == 'default' || $mode == 'overwrite'){
+                $this->countryRepository->removeAll();
+            }
+
+            foreach ($results as $result){
+                $countryName = $result['name']['common'] ?? null;
+                if (!in_array($countryName, $countries) && $countryName!= null) {
+                    $country = new Country();
+                    $country->setName($countryName);
+                    $this->countryRepository->add($country, true);
+                    $numberOfRecords++;
+                }
+            }
             return $numberOfRecords;
         }
         return $numberOfRecords;
