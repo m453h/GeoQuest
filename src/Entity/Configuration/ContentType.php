@@ -20,15 +20,12 @@ class ContentType
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'contentType', targetEntity: FactType::class)]
-    private Collection $factTypes;
 
     #[ORM\OneToMany(mappedBy: 'contentType', targetEntity: CountryFact::class)]
     private Collection $countryFacts;
 
     public function __construct()
     {
-        $this->factTypes = new ArrayCollection();
         $this->countryFacts = new ArrayCollection();
     }
 
@@ -47,14 +44,6 @@ class ContentType
         $this->description = $description;
 
         return $this;
-    }
-
-    /**
-     * @return Collection<int, FactType>
-     */
-    public function getFactTypes(): Collection
-    {
-        return $this->factTypes;
     }
 
     /**
