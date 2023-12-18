@@ -4,6 +4,7 @@ namespace App\Repository\Location;
 
 use App\Entity\Location\Country;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,28 +22,32 @@ class CountryRepository extends ServiceEntityRepository
         parent::__construct($registry, Country::class);
     }
 
-//    /**
-//     * @return Country[] Returns an array of Country objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return true
+     * @throws Exception
+     */
+    public function removeAll()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $conn->executeQuery("TRUNCATE TABLE cfg_countries CASCADE;");
+        return true;
+    }
 
-//    public function findOneBySomeField($value): ?Country
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function add(Country $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function getOrderedCountryList(){
+
+        return $this->createQueryBuilder('country')
+            ->orderBy('country.name','ASC')
+            ->where('country.isFetched is NULL')
+            ->getQuery()
+            ->getResult();
+    }
 }

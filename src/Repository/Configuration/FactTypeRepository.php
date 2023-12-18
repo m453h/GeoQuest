@@ -4,6 +4,7 @@ namespace App\Repository\Configuration;
 
 use App\Entity\Configuration\FactType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,28 +22,16 @@ class FactTypeRepository extends ServiceEntityRepository
         parent::__construct($registry, FactType::class);
     }
 
-//    /**
-//     * @return FactType[] Returns an array of FactType objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('f.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function getAllObjectArrayCollection(): ArrayCollection
+    {
+        $objects = $this->findAll();
+        $arrayCollection = new ArrayCollection();
 
-//    public function findOneBySomeField($value): ?FactType
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        foreach ($objects as $object) {
+            $arrayCollection->set($object->getApiField(), $object);
+        }
+        return $arrayCollection;
+    }
+
+
 }

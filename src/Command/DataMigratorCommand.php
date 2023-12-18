@@ -41,8 +41,10 @@ class DataMigratorCommand extends Command
                 'Load all region data into the database')
             ->addOption('load-sub-regions', null, InputOption::VALUE_NONE,
                 'Load all sub-region data into the database')
-            ->addOption('get-countries', null, InputOption::VALUE_NONE,
-                'Load all country data into the database');
+            ->addOption('load-countries', null, InputOption::VALUE_NONE,
+                'Load all country data into the database')
+            ->addOption('load-country-facts', null, InputOption::VALUE_NONE,
+                'Load all country facts data into the database');
     }
 
     /**
@@ -72,6 +74,14 @@ class DataMigratorCommand extends Command
             $io->info(sprintf("Loading sub regions using <%s> mode...", $mode));
             $count = $this->restCountriesAPIHelper->loadAllSubRegions($mode);
             $io->success(sprintf("%s sub regions successfully recorded in database", $count));
+        } elseif ($input->getOption('load-countries')) {
+            $io->info(sprintf("Loading countries using <%s> mode...", $mode));
+            $count = $this->restCountriesAPIHelper->loadAllCountries($mode);
+            $io->success(sprintf("%s countries successfully recorded in database", $count));
+        }  elseif ($input->getOption('load-country-facts')) {
+            $io->info(sprintf("Loading country facts using <%s> mode...", $mode));
+            $count = $this->restCountriesAPIHelper->loadAllCountryFacts($mode);
+            $io->success(sprintf("%s country facts successfully recorded in database", $count));
         }
 
         return Command::SUCCESS;
