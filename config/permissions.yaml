@@ -31,3 +31,8 @@ Location:
       roleClass: App\Controller\Location\SubRegionController
       actions: [ "view","add","edit","delete" ]
       key: sub-region-configuration
+
+    Country:
+      roleClass: App\Controller\Location\CountryController
+      actions: [ "view","add","edit","delete" ]
+      key: country-configuration

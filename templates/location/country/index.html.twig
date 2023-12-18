@@ -1,0 +1,11 @@
+<td>{{ counter }}</td>
+<td>{{ record.name }}</td>
+<td>{{ record.region }}</td>
+<td>{{ record.sub_region }}</td>
+<td>{% if record.is_fetched=='1' %}
+        <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-500 text-white">Yes</span>
+        {% else %}
+        <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-500 text-white">No</span>
+        {% endif %}
+</td>
+

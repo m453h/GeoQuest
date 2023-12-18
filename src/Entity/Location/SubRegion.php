@@ -88,4 +88,9 @@ class SubRegion
 
         return $this;
     }
+
+    public function getSubRegionLabel(): string
+    {
+        return sprintf('%s - %s',$this->region->getName(), $this->name);
+    }
 }

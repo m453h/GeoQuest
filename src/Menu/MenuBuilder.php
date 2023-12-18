@@ -59,14 +59,11 @@ class MenuBuilder
                     ->addChild('Add', ['route' => 'app_location_sub_region_new'])->setDisplay(false)->getParent()
                     ->addChild('Edit', ['route' => 'app_location_sub_region_edit'])->setDisplay(false)->getParent()
                 ->getParent()
-                    ->addChild('Manage Countries', ['route' => 'app_home'])
-                    ->addChild('Add', ['route' => 'app_home'])->setDisplay(false)->getParent()
-                    ->addChild('Edit', ['route' => 'app_home'])->setDisplay(false)->getParent()
-                ->getParent()
-            ->addChild('Manage Countries', ['route' => 'app_home'])
-                ->addChild('Add', ['route' => 'app_home'])->setDisplay(false)->getParent()
-                ->addChild('Edit', ['route' => 'app_home'])->setDisplay(false)->getParent()
-            ->getParent();
+                    ->addChild('Manage Countries', ['route' => 'app_location_country_index'])
+                    ->addChild('Add', ['route' => 'app_location_country_new'])->setDisplay(false)->getParent()
+                    ->addChild('Edit', ['route' => 'app_location_country_edit'])->setDisplay(false)->getParent()
+                ->getParent();
+
 
 
         $menu->addChild('Data', ['uri' => '#', 'extras'=>['icon'=>'database']])
