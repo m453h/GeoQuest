@@ -49,7 +49,7 @@ class UserType extends AbstractType
             ->add('lastName')
             ->add('middleName');
 
-        if(str_contains($this->requestStack->getCurrentRequest()->getUri(), 'add')) {
+        if(str_contains($this->requestStack->getCurrentRequest()->getUri(), 'new')) {
             $builder->add('password', RepeatedType::class, array(
                 'type' => PasswordType::class,
                 'invalid_message' => 'The password fields must match.',
