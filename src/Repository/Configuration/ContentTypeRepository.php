@@ -85,6 +85,4 @@ class ContentTypeRepository extends ServiceEntityRepository
 
         return $queryBuilder->addOrderBy('id', 'desc');
     }
-
-
 }

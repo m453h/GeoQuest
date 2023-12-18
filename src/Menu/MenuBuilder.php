@@ -45,8 +45,8 @@ class MenuBuilder
                 ->addChild('Edit', ['route' => 'app_configuration_content_type_edit'])->setDisplay(false)->getParent()
                 ->getParent()
             ->addChild('Manage Fact Types', ['route' => 'app_configuration_fact_type_index'])
-                ->addChild('Add', ['route' => 'app_home'])->setDisplay(false)->getParent()
-                ->addChild('Edit', ['route' => 'app_home'])->setDisplay(false)->getParent()
+                ->addChild('Add', ['route' => 'app_configuration_fact_type_new'])->setDisplay(false)->getParent()
+                ->addChild('Edit', ['route' => 'app_configuration_fact_type_edit'])->setDisplay(false)->getParent()
                 ->getParent();
 
         $menu->addChild('Location', ['uri' => '#', 'extras'=>['icon'=>'location-dot']])
