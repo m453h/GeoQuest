@@ -41,4 +41,13 @@ class CountryRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function getOrderedCountryList(){
+
+        return $this->createQueryBuilder('country')
+            ->orderBy('country.name','ASC')
+            ->where('country.isFetched is NULL')
+            ->getQuery()
+            ->getResult();
+    }
 }

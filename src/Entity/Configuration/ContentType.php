@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Entity\Location;
+namespace App\Entity\Configuration;
 
 use App\Entity\Data\CountryFact;
-use App\Repository\Location\CountryRepository;
+use App\Repository\Configuration\ContentTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CountryRepository::class)]
-#[ORM\Table(name: 'cfg_countries')]
-class Country
+#[ORM\Entity(repositoryClass: ContentTypeRepository::class)]
+#[ORM\Table(name: 'cfg_content_types')]
+class ContentType
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,19 +18,17 @@ class Country
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private ?string $description = null;
 
-    #[ORM\ManyToOne(inversedBy: 'countries')]
-    private ?SubRegion $subRegion = null;
+    #[ORM\OneToMany(mappedBy: 'contentType', targetEntity: FactType::class)]
+    private Collection $factTypes;
 
-    #[ORM\OneToMany(mappedBy: 'country', targetEntity: CountryFact::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'contentType', targetEntity: CountryFact::class)]
     private Collection $countryFacts;
-
-    #[ORM\Column(nullable: true)]
-    private ?bool $isFetched = null;
 
     public function __construct()
     {
+        $this->factTypes = new ArrayCollection();
         $this->countryFacts = new ArrayCollection();
     }
 
@@ -39,28 +37,24 @@ class Country
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getDescription(): ?string
     {
-        return $this->name;
+        return $this->description;
     }
 
-    public function setName(string $name): static
+    public function setDescription(string $description): static
     {
-        $this->name = $name;
+        $this->description = $description;
 
         return $this;
     }
 
-    public function getSubRegion(): ?SubRegion
+    /**
+     * @return Collection<int, FactType>
+     */
+    public function getFactTypes(): Collection
     {
-        return $this->subRegion;
-    }
-
-    public function setSubRegion(?SubRegion $subRegion): static
-    {
-        $this->subRegion = $subRegion;
-
-        return $this;
+        return $this->factTypes;
     }
 
     /**
@@ -75,7 +69,7 @@ class Country
     {
         if (!$this->countryFacts->contains($countryFact)) {
             $this->countryFacts->add($countryFact);
-            $countryFact->setCountry($this);
+            $countryFact->setContentType($this);
         }
 
         return $this;
@@ -85,23 +79,12 @@ class Country
     {
         if ($this->countryFacts->removeElement($countryFact)) {
             // set the owning side to null (unless already changed)
-            if ($countryFact->getCountry() === $this) {
-                $countryFact->setCountry(null);
+            if ($countryFact->getContentType() === $this) {
+                $countryFact->setContentType(null);
             }
         }
 
         return $this;
     }
 
-    public function isIsFetched(): ?bool
-    {
-        return $this->isFetched;
-    }
-
-    public function setIsFetched(?bool $isFetched): static
-    {
-        $this->isFetched = $isFetched;
-
-        return $this;
-    }
 }

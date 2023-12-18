@@ -4,6 +4,7 @@ namespace App\Repository\Location;
 
 use App\Entity\Location\SubRegion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,6 +41,17 @@ class SubRegionRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
         $conn->executeQuery("TRUNCATE TABLE cfg_sub_regions CASCADE;");
         return true;
+    }
+
+    public function getAllObjectArrayCollection(): ArrayCollection
+    {
+        $subRegions = $this->findAll();
+        $arrayCollection = new ArrayCollection();
+
+        foreach ($subRegions as $subRegion) {
+            $arrayCollection->set($subRegion->getName(), $subRegion);
+        }
+        return $arrayCollection;
     }
 
 }

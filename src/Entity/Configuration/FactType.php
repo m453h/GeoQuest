@@ -2,7 +2,10 @@
 
 namespace App\Entity\Configuration;
 
+use App\Entity\Data\CountryFact;
 use App\Repository\Configuration\FactTypeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,6 +26,14 @@ class FactType
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $questionPrompt = null;
+
+    #[ORM\OneToMany(mappedBy: 'factType', targetEntity: CountryFact::class, orphanRemoval: true)]
+    private Collection $countryFacts;
+
+    public function __construct()
+    {
+        $this->countryFacts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -64,4 +75,35 @@ class FactType
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, CountryFact>
+     */
+    public function getCountryFacts(): Collection
+    {
+        return $this->countryFacts;
+    }
+
+    public function addCountryFact(CountryFact $countryFact): static
+    {
+        if (!$this->countryFacts->contains($countryFact)) {
+            $this->countryFacts->add($countryFact);
+            $countryFact->setFactType($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCountryFact(CountryFact $countryFact): static
+    {
+        if ($this->countryFacts->removeElement($countryFact)) {
+            // set the owning side to null (unless already changed)
+            if ($countryFact->getFactType() === $this) {
+                $countryFact->setFactType(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
