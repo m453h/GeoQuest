@@ -20,3 +20,9 @@ Configuration:
       roleClass: App\Controller\Configuration\FactTypeController
       actions: [ "view","add","edit","delete" ]
       key: fact-type-configuration
+
+Location:
+    Region:
+      roleClass: App\Controller\Location\RegionController
+      actions: [ "view","add","edit","delete" ]
+      key: region-configuration

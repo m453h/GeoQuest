@@ -51,9 +51,9 @@ class MenuBuilder
 
         $menu->addChild('Location', ['uri' => '#', 'extras'=>['icon'=>'location-dot']])
                 ->setAttributes(['class'=>'hs-accordion', 'id'=>'location-accordion'])
-                    ->addChild('Manage Regions', ['route' => 'app_home'])
-                    ->addChild('Add', ['route' => 'app_home'])->setDisplay(false)->getParent()
-                    ->addChild('Edit', ['route' => 'app_home'])->setDisplay(false)->getParent()
+                    ->addChild('Manage Regions', ['route' => 'app_location_region_index'])
+                    ->addChild('Add', ['route' => 'app_location_region_new'])->setDisplay(false)->getParent()
+                    ->addChild('Edit', ['route' => 'app_location_region_edit'])->setDisplay(false)->getParent()
                 ->getParent()
                     ->addChild('Manage Sub-Regions', ['route' => 'app_home'])
                     ->addChild('Add', ['route' => 'app_home'])->setDisplay(false)->getParent()
