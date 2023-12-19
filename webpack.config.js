@@ -23,6 +23,7 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
+    .addEntry('geo_quest_react', './assets/geo_quest_react.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -77,6 +78,7 @@ Encore
     })
     // Add this line to enable the post-CSS loader
     .enablePostCssLoader()
+    .enableReactPreset()
     .addPlugin(new FosRouting());
 
 
