@@ -34,5 +34,12 @@ Location:
 
     Country:
       roleClass: App\Controller\Location\CountryController
-      actions: [ "view","add","edit","delete" ]
+      actions: [ "view","add","edit","delete", "info" ]
       key: country-configuration
+
+
+Data:
+  CountryFacts:
+    roleClass: App\Controller\Data\CountryFactController
+    actions: [ "view","add","edit","delete" ]
+    key: country-facts-data
