@@ -124,4 +124,20 @@ class CountryRepository extends ServiceEntityRepository
 
         return $queryBuilder->addOrderBy('c.id', 'desc');
     }
+
+    /**
+     * @throws Exception
+     */
+    public function getAllFacts($countryId): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $queryBuilder = new QueryBuilder($conn);
+        return $queryBuilder->select('content as value, ct.description as type, t.description AS label')
+            ->from('tbl_country_facts', 'f')
+            ->join('f','cfg_fact_types','t','t.id=f.fact_type_id')
+            ->join('f','cfg_content_types','ct','ct.id=f.content_type_id')
+            ->andWhere('f.country_id=:countryId')
+            ->setParameter('countryId',$countryId)
+            ->fetchAllAssociative();
+    }
 }

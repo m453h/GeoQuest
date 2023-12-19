@@ -1,0 +1,35 @@
+<div class="col-12">
+    <a href="{{ path('app_location_country_index') }}" class="btn btn-primary mb-2 me-1"><i class="fa-solid fa-arrow-left"></i> Back to list</a>
+</div>
+
+<div class="grid lg:grid-cols-2 gap-10">
+    <div>
+        <ul class="list-styled">
+            <li class="py-3 border-b border-gray-100"><span class="font-semibold me-2">Country:</span>{{ country.name }}</li>
+            <li class="py-3 border-b border-gray-100"><span class="font-semibold me-2">Region:</span>{{ country.subRegion.region.name }}</li>
+            <li class="py-3 border-b border-gray-100"><span class="font-semibold me-2">Sub-Region:</span>{{ country.subRegion.name }}</li>
+            {% for fact in facts %}
+                {%  if 'Image' not in fact.type %}
+                     <li class="py-3 border-b border-gray-100"><span class="font-semibold me-2">{{ fact.label }}:</span>{{ fact.value|json_decoder }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        <table class="w-full">
+            <tr>
+                {% for fact in facts %}
+                    {%  if 'Image' in fact.type %}
+                        <td class="border-y border-gray-100 w-1/2 content-center  p-6" style="text-align: center">
+                            <img src="{{ fact.value }}" alt="{{ fact.label }}"  class=" mx-auto w-auto max-h-24" />
+                            <p class="font-medium mt-4">{{ fact.label }}</p>
+                        </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </table>
+    </div>
+
+</div>
+

@@ -115,6 +115,22 @@ class CountryController extends AbstractController
         );
     }
 
+    #[Route('/{id}/show/', name: 'app_location_country_show',  defaults: ['id' => 0], methods: ['GET'])]
+    public function show(Request $request, Country $country, CountryRepository $countryRepository): Response
+    {
+        $form = $this->createForm(CountryType::class, $country);
+        $form->handleRequest($request);
+
+        $countryFacts = $countryRepository->getAllFacts($country->getId());
+
+        return $this->render('main/app.show.html.twig', [
+            'country' => $country,
+            'facts' => $countryFacts,
+            'page_name'=>'Country Details',
+            'template'=>'location/country/show.html.twig'
+        ]);
+    }
+
     #[Route('/{id}/delete/', name: 'app_location_country_delete', methods: ['GET'])]
     public function delete(Country $country, EntityManagerInterface $entityManager): Response
     {
