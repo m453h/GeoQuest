@@ -1,5 +1,8 @@
 <td>{{ counter }}</td>
-<td>{{ record.name }}</td>
+<td>
+        {{ record.name }}
+        <a class="block text-sm text-blue-400 italic hover:underline" href="{{ path('app_data_country_fact_index', {'parentId': record.id}) }}" title="Click to manage facts">Manage Country Facts</a>
+</td>
 <td>{{ record.region }}</td>
 <td>{{ record.sub_region }}</td>
 <td>{% if record.is_fetched=='1' %}

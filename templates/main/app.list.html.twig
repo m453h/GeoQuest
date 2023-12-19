@@ -22,9 +22,10 @@
                             {% set headers = grid.getGridHeaders() %}
                             {% set buttons = grid.getButtons() %}
                             {% set ignoredButtons = grid.getIgnoredButtons() %}
-                            {% set path = path(grid.getPath()) %}
                             {% if grid.parentValue != null %}
-                                {% set path = path~'/'~grid.parentValue~'/' %}
+                                {% set path = path(grid.getPath(),{ 'parentId': grid.parentValue}) %}
+                            {% else %}
+                                {% set path = path(grid.getPath()) %}
                             {% endif %}
 
                             {% if headers|last['columnType'] == 'action' %}

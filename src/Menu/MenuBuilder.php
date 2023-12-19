@@ -62,19 +62,11 @@ class MenuBuilder
                     ->addChild('Manage Countries', ['route' => 'app_location_country_index'])
                     ->addChild('Add', ['route' => 'app_location_country_new'])->setDisplay(false)->getParent()
                     ->addChild('Edit', ['route' => 'app_location_country_edit'])->setDisplay(false)->getParent()
+                    ->addChild('Show', ['route' => 'app_location_country_show'])->setDisplay(false)->getParent()
+                    ->addChild('View Facts', ['route' => 'app_data_country_fact_index'])->setDisplay(false)->getParent()
+                    ->addChild('Add Facts', ['route' => 'app_data_country_fact_new'])->setDisplay(false)->getParent()->getParent()
+                    ->addChild('Edit Facts', ['route' => 'app_data_country_fact_edit'])->setDisplay(false)->getParent()->getParent()
                 ->getParent();
-
-
-
-        $menu->addChild('Data', ['uri' => '#', 'extras'=>['icon'=>'database']])
-            ->setAttributes(['class'=>'hs-accordion', 'id'=>'country-data-accordion'])
-            ->setChildrenAttribute('class', '')
-            ->addChild('Manage Country Facts', ['route' => 'app_home'])
-                ->addChild('Add', ['route' => 'app_home'])->setDisplay(false)->getParent()
-                ->addChild('Edit', ['route' => 'app_home'])->setDisplay(false)->getParent()
-                ->addChild('Upload', ['route' => 'app_home'])->setDisplay(false)->getParent()
-                ->addChild('Details', ['route' => 'app_home'])->setDisplay(false)->getParent()
-            ->getParent();
 
 
         $menu->addChild('System users', ['uri' => '#', 'extras'=>['icon'=>'users']])

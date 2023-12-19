@@ -1,0 +1,19 @@
+<td>{{ counter }}</td>
+<td>
+    {% if record.content_type == 'Image (URL)' %}
+            <img src="{{ record.content }}" alt="{{ record.content_type }}" class="h-20"/>
+    {% elseif record.content_type == 'Text (JSON)' %}
+            {{ record.content | json_decoder }}
+    {% else %}
+            {{ record.content }}
+    {% endif %}
+</td>
+<td>{{ record.fact_type }}</td>
+<td>{{ record.content_type }}</td>
+<td>{% if record.is_user_created=='1' %}
+        <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-500 text-white">Yes</span>
+    {% else %}
+        <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-gray-500 text-white">No</span>
+    {% endif %}
+</td>
+
