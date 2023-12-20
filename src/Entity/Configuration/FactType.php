@@ -30,6 +30,9 @@ class FactType
     #[ORM\OneToMany(mappedBy: 'factType', targetEntity: CountryFact::class, orphanRemoval: true)]
     private Collection $countryFacts;
 
+    #[ORM\Column(length: 255)]
+    private ?string $summary = null;
+
     public function __construct()
     {
         $this->countryFacts = new ArrayCollection();
@@ -102,6 +105,18 @@ class FactType
                 $countryFact->setFactType(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSummary(): ?string
+    {
+        return $this->summary;
+    }
+
+    public function setSummary(string $summary): static
+    {
+        $this->summary = $summary;
 
         return $this;
     }
