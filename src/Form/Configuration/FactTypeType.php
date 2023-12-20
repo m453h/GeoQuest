@@ -15,7 +15,7 @@ class FactTypeType extends AbstractType
             ->add('description')
             ->add('apiField')
             ->add('questionPrompt')
-        ;
+            ->add('summary');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
