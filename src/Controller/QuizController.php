@@ -21,6 +21,10 @@ class QuizController extends AbstractController
 
         if ($quest != null) {
             $quest = $factTypeRepository->findOneBy(['apiField'=>$quest]);
+            $session = $request->getSession();
+            $session->set('quiz-type',$quest);
+            $session->set('questionsList', null);
+            $session->set('in-session', false);
         } else {
             $quizzes = $factTypeRepository->findAll();
         }
