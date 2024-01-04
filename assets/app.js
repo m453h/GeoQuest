@@ -9,5 +9,4 @@
 import './styles/app.css';
 import deleteModal from './delete_modal';
 import '../node_modules/preline/dist/preline.js';
-
 deleteModal();

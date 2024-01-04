@@ -2,6 +2,7 @@
 module.exports = {
   content: [
       "./templates/**/*.twig",
+      "./assets/**/*.js",
       "node_modules/preline/dist/*.js"
   ],
   theme: {

@@ -1,11 +1,12 @@
 import React from "react";
-import { render } from 'react-dom';
+import ReactDOM from "react-dom/client";
 import GeoQuestApp from './GeoQuest/GeoQuestApp'
 
 const shouldShowHeart = true;
-render(
+
+const root = ReactDOM.createRoot(document.getElementById("quiz-content"));
+root.render(
     <div>
         <GeoQuestApp withHeart={shouldShowHeart} />
-    </div>,
-    document.getElementById('quiz-content')
+    </div>
 );

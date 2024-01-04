@@ -15,11 +15,14 @@ export default class GeoQuestApp extends Component {
             return (
                 <div>
                     <p>{question.content}</p>
-                    <p>{question.options}</p>
+                    <ul>
+                        {question.options.map((option, index) => (
+                            <li key={index}>{option}</li>
+                        ))}
+                    </ul>
                 </div>
             )
         });
-
 
         return (
             <div className="container mx-auto">
