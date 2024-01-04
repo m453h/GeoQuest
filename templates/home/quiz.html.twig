@@ -1,0 +1,106 @@
+{% extends 'landing.base.html.twig' %}
+
+
+{% block body %}
+<body style="background: #E2E8F0">
+    <div class="landing">
+
+        <!-- ========== HEADER ========== -->
+        <header class="flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full text-sm">
+            <nav class="mt-6 relative max-w-[85rem] w-full mx-2 py-3 px-4 md:flex md:items-center md:justify-between md:py-0 md:px-6 lg:px-8 xl:mx-auto dark:bg-gray-800 dark:border-gray-700" aria-label="Global">
+                <div class="flex items-center justify-between">
+                    <a class="flex-none text-xl font-semibold text-white" href="{{ path('app_quiz_home') }}" aria-label="Brand">
+                        <img src="{{ asset('build/images/logo_dark.png') }}" alt="GeoQuest Logo" class="h-[80px]"/>
+                    </a>
+                    <div class="md:hidden">
+                        <button type="button" class="hs-collapse-toggle bg-white w-8 h-8 flex justify-center items-center text-sm font-semibold rounded-full border border-gray-200 text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" data-hs-collapse="#navbar-collapse-with-animation" aria-controls="navbar-collapse-with-animation" aria-label="Toggle navigation">
+                            <svg class="hs-collapse-open:hidden flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
+                            <svg class="hs-collapse-open:block hidden flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div id="navbar-collapse-with-animation" class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow md:block">
+                    <div class="flex flex-col gap-y-4 gap-x-0 mt-5 md:flex-row md:items-center md:justify-end md:gap-y-0 md:gap-x-7 md:mt-0 md:ps-7">
+                        <a class="font-medium text-blue-600 md:py-6 dark:text-blue-500" href="{{ path('app_quiz_home') }}" aria-current="page">Home</a>
+                        <a class="font-medium text-white hover:text-gray-400 md:py-6 dark:text-gray-400 dark:hover:text-gray-500" href="#">Quiz</a>
+                        <a class="font-medium text-white hover:text-gray-400 md:py-6 dark:text-gray-400 dark:hover:text-gray-500" href="#">Leaderboards</a>
+
+                        <a href="{{ path('app_logout') }}" class="py-2 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-white text-white hover:bg-red-600 hover:text-white hover:border-red-600">
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <!-- ========== END HEADER ========== -->
+        {%  if quest is null %}
+            <div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 py-10 text-center">
+                <h2 class="text-2xl text-white font-light"><span class="font-bold">Welcome</span> {{ app.user.firstName }} 🤝</h2>
+                <div class="divider bg-white"></div>
+            </div>
+        {% else %}
+            <div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <h2 class="text-2xl text-white font-light">Current Quest: <span class="font-bold">{{ quest.description }}</span>  </h2>
+                <div class="divider divider-left bg-white"></div>
+            </div>
+        {% endif %}
+
+    </div>
+
+        <div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 py-10 h-[400px]">
+            <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto {% if quizzes is null  %}bg-white rounded-lg shadow-lg{% endif %}">
+                {% if quizzes is not null  %}
+                    <div class="text-center">
+                        <h2 class="text-3xl font-light">Choose your <span class="font-medium">Quest</span></h2>
+                        <div class="divider  bg-purple-700"></div>
+                        <p class="mt-1 text-gray-600 dark:text-gray-400 mb-10">Select a quest you want to follow</p>
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for quiz in quizzes %}
+                                <div class="grid flex flex-col bg-white border shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
+                                    <img class="w-full h-auto rounded-t-xl" src="{{ asset('build/images/cards/'~quiz.apiField~'.jpg') }}" alt="Image Description">
+                                    <div class="p-4 md:p-5">
+                                        <h3 class="text-lg font-bold text-gray-800 dark:text-white">
+                                            {{ quiz.description }}
+                                        </h3>
+                                        <p class="mt-1 text-gray-500 dark:text-gray-400">
+                                           {{ quiz.summary }}
+                                        </p>
+                                        <a  href="{{ path('app_quiz_home',{ 'quest': quiz.apiField}) }}" class="py-3 px-4 mt-5 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700">
+                                            Play Now
+                                        </a>
+                                    </div>
+                                </div>
+                        {%  endfor %}
+                    </div>
+                {% else %}
+                    <form action="#" id="quiz-form" method="POST">
+
+                    <div class="flex w-full h-1.5 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700 mb-12" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                        <div id="progress" class="flex flex-col justify-center rounded-full overflow-hidden bg-purple-600 text-xs text-white text-center whitespace-nowrap transition duration-500" style="width: 0"></div>
+                    </div>
+                    <p class="text-2xl font-light mb-2" id="question-text"></p>
+                        <p id="result"></p>
+
+                        <div class="grid md:grid-cols-2 mt-6">
+                            <div class="grid">
+                                <ul class="max-w-sm flex flex-col" id="question-answers">
+
+                                </ul>
+                            </div>
+                            <div class="grid">
+                            </div>
+                    </div>
+                    <button type="submit" class="mt-5 py-3 px-4 text-sm font-semibold rounded-lg bg-purple-600 text-white hover:bg-purple-700" id="submit-answer">
+                        Submit Answer
+                    </button>
+                    <button type="button" class="mt-5 py-3 px-4 text-sm font-semibold rounded-lg bg-purple-600 text-white hover:bg-purple-700" id="next-question">
+                        Next Question
+                    </button>
+                    </form>
+                {% endif %}
+            </div>
+    </div>
+</body>
+{% endblock %}
