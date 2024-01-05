@@ -122,3 +122,6 @@ div.login-cover{
     background-size: cover;
 }
 
+li.selected {
+    @apply bg-purple-100;
+}

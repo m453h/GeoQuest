@@ -79,8 +79,13 @@ Encore
     // Add this line to enable the post-CSS loader
     .enablePostCssLoader()
     .enableReactPreset()
-    .addPlugin(new FosRouting());
-
-
+    .addPlugin(new FosRouting())
+    .configureBabel((babelConfig) => {
+        if (Encore.isProduction()) {
+            babelConfig.plugins.push(
+                "transform-react-remove-prop-types",
+            )
+        }
+    });
 
 module.exports = Encore.getWebpackConfig();
