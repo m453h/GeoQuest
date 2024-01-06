@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
-import GeoQuestQuestion from "./GeoQuestQuestion";
 
 
 export default  class GeoQuestQuizProgress extends Component {
@@ -28,6 +27,6 @@ export default  class GeoQuestQuizProgress extends Component {
     }
 }
 
-GeoQuestQuestion.propTypes = {
+GeoQuestQuizProgress.propTypes = {
     percentage: PropTypes.number,
 }
