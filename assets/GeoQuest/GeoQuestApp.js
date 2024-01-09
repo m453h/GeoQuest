@@ -7,26 +7,30 @@ export default class GeoQuestApp extends Component {
         super(props);
         this.state = {
             selectedAnswerId: null,
-            questions:[],
+            questions: [],
             isLoaded: false,
             canMoveToNextQuestion: false,
             numberOfQuestionsDone: 0,
-            answerEvaluationFeedback:{},
-            totalQuestions: 0
+            answerEvaluationFeedback: {},
+            totalQuestions: 0,
+            remainingQuestions: 0,
+            totalScore: 0,
+            viewResults: false,
         }
         this.handleAnswerSelect = this.handleAnswerSelect.bind(this);
         this.handleAnswerSubmit = this.handleAnswerSubmit.bind(this);
         this.handleNextQuestionClick = this.handleNextQuestionClick.bind(this);
+        this.handleTotalScoreButtonClick = this.handleTotalScoreButtonClick.bind(this);
     }
 
     componentDidMount() {
         getQuestions()
             .then((data) =>{
-                console.log(data);
                 this.setState( {
                     questions: data,
                     isLoaded: true,
-                    totalQuestions: data.length
+                    totalQuestions: data.length,
+                    remainingQuestions: data.length
                 })
             });
     }
@@ -46,17 +50,15 @@ export default class GeoQuestApp extends Component {
         delete answer['contentType'];
         delete answer['prompt'];
 
-        console.log(JSON.stringify(answer));
-
         submitAnswer(answer).then( data =>{
             this.setState((prevState)=>({
                 answerEvaluationFeedback: data,
                 canMoveToNextQuestion: true,
                 numberOfQuestionsDone: prevState.numberOfQuestionsDone + 1,
+                remainingQuestions: data.remainingQuestions,
+                totalScore: data.totalScore
             }));
         });
-
-
     }
 
     handleNextQuestionClick() {
@@ -65,6 +67,12 @@ export default class GeoQuestApp extends Component {
             canMoveToNextQuestion: false,
             selectedAnswerId: null,
             questions: prevState.questions.slice(1)
+        }));
+    }
+
+    handleTotalScoreButtonClick() {
+        this.setState((prevState)=>({
+            viewResults: true,
         }));
     }
 
@@ -82,6 +90,7 @@ export default class GeoQuestApp extends Component {
                 onAnswerSelected = {this.handleAnswerSelect}
                 onAnswerSubmit = {this.handleAnswerSubmit}
                 onNextQuestionClick = {this.handleNextQuestionClick}
+                onTotalScoreButtonClick = {this.handleTotalScoreButtonClick}
                 percentage={percentage}
             />
         );

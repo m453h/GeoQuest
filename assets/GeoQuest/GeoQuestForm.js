@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import GeoQuestQuizProgress from "./GeoQuestQuizPogress";
 import PropTypes from "prop-types";
+import results_img from '../images/backgrounds/results.png';
 
 export default class GeoQuestForm extends Component {
 
@@ -8,6 +9,7 @@ export default class GeoQuestForm extends Component {
         super(props);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleNextButtonClick = this.handleNextButtonClick.bind(this);
+        this.handleTotalScoreButtonClick = this.handleTotalScoreButtonClick.bind(this);
         this.state = {
             errorMessage: ''
         };
@@ -40,6 +42,12 @@ export default class GeoQuestForm extends Component {
         onNextQuestionClick();
     }
 
+    handleTotalScoreButtonClick (event) {
+        event.preventDefault();
+        const { onTotalScoreButtonClick } = this.props;
+        onTotalScoreButtonClick();
+    }
+
     render() {
         const {
             selectedAnswerId,
@@ -49,6 +57,9 @@ export default class GeoQuestForm extends Component {
             isLoaded,
             canMoveToNextQuestion,
             answerEvaluationFeedback,
+            remainingQuestions,
+            viewResults,
+            totalScore
         } = this.props;
         const {errorMessage} = this.state;
 
@@ -62,6 +73,39 @@ export default class GeoQuestForm extends Component {
                         <div className="p-4">
                             Loading...
                         </div>
+                    </div>
+                </div>
+            );
+        }
+
+        if(viewResults) {
+
+            let remark = '';
+
+            if (totalScore >= 90) {
+                remark = 'Congratulations !'
+            } else if (totalScore >= 80) {
+                remark = 'Great stuff !'
+            } else if (totalScore >= 70) {
+                remark = 'Good work, ';
+            } else if (totalScore <= 30){
+                remark = 'Oh no ...';
+            }
+
+            return (
+                <div className="container mx-auto flex justify-center items-center text-center mb-4">
+                    <div>
+                        <h3 className="text-3xl font-bold">Your Results</h3>
+                        <div className="divider  bg-purple-700"></div>
+                        <img src={results_img} alt="Results" />
+                        <p className="text-2xl italic">{remark} You have scored {totalScore}%</p>
+
+                        <a type="button"
+                                className="mt-5 py-3 px-4 text-sm font-semibold rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+                                id="next-question"
+                                href='/app/quiz/'>
+                           Start another Quest
+                        </a>
                     </div>
                 </div>
             );
@@ -144,13 +188,22 @@ export default class GeoQuestForm extends Component {
                         canMoveToNextQuestion ?
 
                             (
-                                <button type="button"
-                                        className="mt-5 py-3 px-4 text-sm font-semibold rounded-lg bg-purple-600 text-white hover:bg-purple-700"
-                                        id="next-question"
-                                        onClick={this.handleNextButtonClick}
-                                >
-                                    Next Question
-                                </button>
+                                    remainingQuestions > 0 ? (
+                                            <button type="button"
+                                                    className="mt-5 py-3 px-4 text-sm font-semibold rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+                                                    id="next-question"
+                                                    onClick={this.handleNextButtonClick}>
+                                                Next Question
+                                            </button>
+                                    ) :
+                                    (
+                                        <button type="button"
+                                                className="mt-5 py-3 px-4 text-sm font-semibold rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+                                                id="next-question"
+                                                onClick={this.handleTotalScoreButtonClick}>
+                                            View Total Score
+                                        </button>
+                                    )
                             ) :
                             (
                                 <button type="submit"
@@ -160,7 +213,9 @@ export default class GeoQuestForm extends Component {
                                     Submit Answer
                                 </button>
                             )
+
                     }
+
                 </form>
             </div>
         );
@@ -177,4 +232,7 @@ GeoQuestForm.propTypes = {
     canMoveToNextQuestion: PropTypes.bool.isRequired,
     answerEvaluationFeedback: PropTypes.object.isRequired,
     onNextQuestionClick: PropTypes.func.isRequired,
+    remainingQuestions: PropTypes.number.isRequired,
+    onTotalScoreButtonClick: PropTypes.func.isRequired,
+    viewResults: PropTypes.bool.isRequired,
 }
