@@ -104,15 +104,17 @@ class CountryFactRepository extends ServiceEntityRepository
      * @return array[]
      * @throws Exception
      */
-    public function getQuestionForFactId($factId): array
+    public function getQuestionsForFactId($factId): array
     {
         $conn = $this->getEntityManager()->getConnection();
         $queryBuilder = new QueryBuilder($conn);
 
         return $queryBuilder->select('f.id,
-                                             content, 
+                                             content,
+                                             question_prompt as prompt,
                                              ct.description as content_type,
                                              country_id as answer_id,
+                                             api_field,
                                              c.name as answer_label,
                                              t.description AS fact_type')
             ->from('tbl_country_facts', 'f')
@@ -140,6 +142,23 @@ class CountryFactRepository extends ServiceEntityRepository
             ->addOrderBy('RANDOM()')
             ->setMaxResults('4')
             ->fetchAllAssociative();
+    }
+
+    /**
+     * @param $factId
+     * @return array[]
+     * @throws Exception
+     */
+    public function getCountryIdByFactId($factId): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $queryBuilder = new QueryBuilder($conn);
+        return $queryBuilder->select('country_id as id, name as text')
+            ->from('tbl_country_facts', 'f')
+            ->join('f','cfg_countries','c','c.id=f.country_id')
+            ->andWhere('f.id=:id')
+            ->setParameter('id',$factId)
+            ->fetchAssociative();
     }
 
 }
