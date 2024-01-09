@@ -6,10 +6,16 @@ function fetchJson(url, options) {
     })
 }
 
-export function getQuestion() {
-    return fetchJson('/api/quiz/generate-question');
+export function getQuestions() {
+    return fetchJson('/api/quiz/generate-questions');
 }
 
-export function submitAnswer() {
-    return fetchJson('/api/quiz/evaluate-answer');
+export function submitAnswer(answer) {
+    return fetchJson('/api/quiz/evaluate-answer', {
+            method: 'POST',
+            body: JSON.stringify(answer),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
 }

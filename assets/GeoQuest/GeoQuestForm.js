@@ -7,14 +7,16 @@ export default class GeoQuestForm extends Component {
     constructor(props) {
         super(props);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
+        this.handleNextButtonClick = this.handleNextButtonClick.bind(this);
         this.state = {
-            answerInputError: ''
+            errorMessage: ''
         };
     }
 
     handleFormSubmit (event) {
         event.preventDefault();
-        const {selectedAnswerId, onAnswerSubmit} = this.props;
+        const {selectedAnswerId, onAnswerSubmit, questions} = this.props;
+        let currentQuestion = questions[0];
 
         if (selectedAnswerId === null){
 
@@ -28,14 +30,26 @@ export default class GeoQuestForm extends Component {
             this.setState({
                 errorMessage: ""
             });
-            return;
+            onAnswerSubmit(selectedAnswerId, currentQuestion);
         }
+    }
 
-        onAnswerSubmit(selectedAnswerId);
+    handleNextButtonClick (event) {
+        event.preventDefault();
+        const {onNextQuestionClick} = this.props;
+        onNextQuestionClick();
     }
 
     render() {
-        const {selectedAnswerId, onAnswerSelected, percentage, question, isLoaded} = this.props;
+        const {
+            selectedAnswerId,
+            onAnswerSelected,
+            percentage,
+            questions,
+            isLoaded,
+            canMoveToNextQuestion,
+            answerEvaluationFeedback,
+        } = this.props;
         const {errorMessage} = this.state;
 
         if(!isLoaded) {
@@ -55,13 +69,13 @@ export default class GeoQuestForm extends Component {
 
         return (
             <div className="container mx-auto">
-                <form id="quiz-form" onSubmit={this.handleFormSubmit}>
+                <form id="quiz-form">
 
                     <GeoQuestQuizProgress
                         percentage={percentage}
                     />
 
-                    <p className="text-2xl font-light mb-2" id="question-text">{question.question}</p>
+                    <p className="text-2xl font-light mb-2" id="question-text">{questions[0].prompt}</p>
                     {
                         errorMessage &&
                             <div
@@ -74,14 +88,28 @@ export default class GeoQuestForm extends Component {
                             </div>
                     }
 
-                    <p id="result"></p>
+                    {
+                        answerEvaluationFeedback.description && (
+                        <div
+                            id="dismiss-toast"
+                            className={`mt-5 max-w-sm border text-sm border-l-4 ${answerEvaluationFeedback.status === "wrong" ? 'bg-red-100 border-red-200 text-red-800 border-l-red-500' : answerEvaluationFeedback.status === "correct" ? 'bg-green-100 border-green-200 text-green-800 border-l-green-500' : ''}`}
+                            role="alert">
+
+                            <div className="p-4">
+                                {answerEvaluationFeedback.description}
+                            </div>
+                        </div>
+                    )
+
+                    }
+
 
                     <div className="grid md:grid-cols-2 mt-6">
-                        <div className="grid">
+                        <div>
                             <ul className="max-w-sm flex flex-col" id="question-answers">
                                 {
-                                    question.options &&
-                                    question.options.map((option) => (
+                                    questions[0].options &&
+                                    questions[0].options.map((option) => (
                                         <li key={`answer-${option.id}`}
                                             className={`${selectedAnswerId === option.id ? 'selected' : ''}  inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium bg-white border -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg`}>
                                             <div className="flex items-center h-5">
@@ -103,19 +131,36 @@ export default class GeoQuestForm extends Component {
                                 }
                             </ul>
                         </div>
+                        {
+                            questions[0].imgURL &&
+
+                            <div>
+                                <img src={questions[0].imgURL} alt="Question Image URL" className="w-64" loading="lazy"/>
+                            </div>
+                        }
                     </div>
 
-                    <button type="submit"
-                            className="mt-5 py-3 px-4 mr-2 text-sm font-semibold rounded-lg bg-purple-600 text-white hover:bg-purple-700"
-                            id="submit-answer">
-                        Submit Answer
-                    </button>
+                    {
+                        canMoveToNextQuestion ?
 
-                    <button type="button"
-                            className="mt-5 py-3 px-4 text-sm font-semibold rounded-lg bg-purple-600 text-white hover:bg-purple-700"
-                            id="next-question">
-                        Next Question
-                    </button>
+                            (
+                                <button type="button"
+                                        className="mt-5 py-3 px-4 text-sm font-semibold rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+                                        id="next-question"
+                                        onClick={this.handleNextButtonClick}
+                                >
+                                    Next Question
+                                </button>
+                            ) :
+                            (
+                                <button type="submit"
+                                        className="mt-5 py-3 px-4 mr-2 text-sm font-semibold rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+                                        onClick={this.handleFormSubmit}
+                                        id="submit-answer">
+                                    Submit Answer
+                                </button>
+                            )
+                    }
                 </form>
             </div>
         );
@@ -127,6 +172,9 @@ GeoQuestForm.propTypes = {
     onAnswerSelected: PropTypes.func.isRequired,
     percentage: PropTypes.number,
     onAnswerSubmit: PropTypes.func,
-    question: PropTypes.object,
-    isLoaded: PropTypes.bool.isRequired
+    questions: PropTypes.array,
+    isLoaded: PropTypes.bool.isRequired,
+    canMoveToNextQuestion: PropTypes.bool.isRequired,
+    answerEvaluationFeedback: PropTypes.object.isRequired,
+    onNextQuestionClick: PropTypes.func.isRequired,
 }
