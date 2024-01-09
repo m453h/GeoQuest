@@ -17,24 +17,31 @@ class QuizController extends AbstractController
     /**
      * @throws Exception
      */
-    #[Route('/generate-question', name: 'api_generate_question', options: ['expose' => true], methods: ['GET'])]
+    #[Route('/generate-questions', name: 'api_generate_questions', options: ['expose' => true], methods: ['GET'])]
     public function generateQuestion(GeoQuestHelper $app, Request $request): Response
     {
         $session = $request->getSession();
         $quizType = $session->get('quiz-type');
-
-        if ($quizType instanceof FactType && !$session->get('in-session')) {
-            $app->generateQuestionsSetByFactId($quizType->getId());
+        $results = [];
+        if ($quizType instanceof FactType) {
+            $results = $app->generateQuestionsSetByFactId($quizType->getId());
         }
-
-        return new JsonResponse($app->getNextQuestionInList($quizType));
+        return new JsonResponse($results);
     }
 
-    #[Route('/evaluate-answer', name: 'api_evaluate_answer', options: ['expose' => true], methods: ['POST'])]
+    /**
+     * @throws Exception
+     */
+    #[Route('/evaluate-answer', name: 'api_evaluate_answer', options: ['expose' => true], methods: ['GET'])]
     public function evaluateAnswer(GeoQuestHelper $app, Request $request): Response
     {
+
+        $data = $request->getContent();
+
+        $data = '{"id":2187,"factType":"Capitals","quizIdentifier":"018cecca-7b46-7ade-96ce-2e06d0a2bf41","answerId":14}';
+
         return new JsonResponse(
-            $app->evaluateCurrentAnswer($request->get('answer'))
+            $app->evaluateCurrentAnswer(json_decode($data, true))
         );
     }
 
