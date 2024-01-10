@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\UserAccounts\User;
 use App\Form\UserAccounts\SignUpType;
-use App\Repository\UserAccounts\UserRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
