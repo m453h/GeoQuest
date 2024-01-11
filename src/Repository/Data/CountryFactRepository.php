@@ -161,4 +161,17 @@ class CountryFactRepository extends ServiceEntityRepository
             ->fetchAssociative();
     }
 
+    /**
+     * @throws Exception
+     */
+    public function getTotals(){
+        $conn = $this->getEntityManager()->getConnection();
+        $queryBuilder = new QueryBuilder($conn);
+        $data = $queryBuilder
+            ->select('COUNT(u.id)')
+            ->from('tbl_country_facts', 'u')
+            ->fetchNumeric();
+        return ($data[0]);
+    }
+
 }

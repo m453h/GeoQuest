@@ -101,7 +101,7 @@ class UserController extends AbstractController
         return $this->render('main/app.show.html.twig', [
             'user' => $user,
             'page_name'=>'User Account Details',
-            'template'=>'user_accounts/user/buttons.html.twig'
+            'template'=>'user_accounts/user/show.html.twig'
         ]);
     }
 

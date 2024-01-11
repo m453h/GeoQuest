@@ -140,4 +140,17 @@ class CountryRepository extends ServiceEntityRepository
             ->setParameter('countryId',$countryId)
             ->fetchAllAssociative();
     }
+
+    /**
+     * @throws Exception
+     */
+    public function getTotals(){
+        $conn = $this->getEntityManager()->getConnection();
+        $queryBuilder = new QueryBuilder($conn);
+        $data = $queryBuilder
+            ->select('COUNT(u.id)')
+            ->from('cfg_countries', 'u')
+            ->fetchNumeric();
+        return ($data[0]);
+    }
 }

@@ -139,5 +139,17 @@ class UserRepository extends ServiceEntityRepository
         return $results['password'];
     }
 
+    /**
+     * @throws Exception
+     */
+    public function getTotals(){
+        $conn = $this->getEntityManager()->getConnection();
+        $queryBuilder = new QueryBuilder($conn);
+        $data = $queryBuilder
+            ->select('COUNT(u.id)')
+            ->from('tbl_user_accounts', 'u')
+            ->fetchNumeric();
+        return ($data[0]);
+    }
 
 }

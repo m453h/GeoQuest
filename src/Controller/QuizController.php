@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Configuration\FactType;
 use App\Repository\Configuration\FactTypeRepository;
+use App\Repository\Data\QuizRepository;
+use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,6 +36,20 @@ class QuizController extends AbstractController
             'quizzes'=>$quizzes,
             'quest'=>$quest,
             'page_name' => 'Home'
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[Route('/leaderboards', name: 'app_view_leaderboards')]
+    public function getLeaderBoards(QuizRepository $quizRepository): Response
+    {
+
+        return $this->render('home/leaderboards.html.twig', [
+            'controller_name' => 'HomeController',
+            'leaderBoards'=>$quizRepository->getCurrentLeaderBoards(),
+            'page_name' => 'Leaderboards'
         ]);
     }
 
